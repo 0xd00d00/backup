@@ -1,0 +1,12 @@
+semaphore vs mutex
+
+
+1. mutex - 자원의 독점
+	lock을 획득한 thread만 unlock 가능
+
+2. semaphore - 자원의 한정적 공유
+	모든 thread가 counter 증가시킬 수 있음..
+
+
+무슨 이야기냐면..
+

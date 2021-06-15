@@ -1,0 +1,44 @@
+|		write		 +-----------+  read		 |
+|  --------> |shared data| ------->  |
+|						 +-----------+					 |
+producer													Consumer
+
+생상자 소비자 모델
+
+생상자는 생산하고
+소비자는 가져다 씀
+
+- 공유데이터는 동시 접근으로 부터 보호 되어여함
+	- std::mutex 사용
+	- lock management
+		- std::lock_guard 사용해서 lock 관리
+
+mutex로 접근하면 안전하게 쓰고 읽고 가능
+
+어떤 문제가 나올 수 있는가?
+-> 생산자가 아직 데이터 생산 안했는데.. 소비자 thread가 먼저 도착해서 읽을 수
+있음..
+
+확실하게 보기위해서는 생산자 부분에 sleep 주면 됨
+
+
+생산자가 생산할 때 까지 소비자는 기다려야함.
+-> 생산자가 생산한 후 소비되어야함
+-> 생산자가 Data 준비 완료됐을 경우 signal을 보냄
+
+신호를 기반해서 데이터 생산을 알릴 때 사용하는 것 -> std::condition variable
+
+
+1. 생산자보다 소비자가 먼저 도착할 경우
+	-> wait로 기다리게 함.
+		-> wait를 사용할 경우 먼저 mutex lock을 해제하고, sleep 상태로 들어감.
+		signal을 받아야 동작한다. 생성자에서 signal을 보낼 경우 일어남.
+
+2. 생산자는 signal을 보냈는데 소비자가 도착하지 않은 경우
+	-> 영원히 잠든 상태가 될 수 있음....
+
+wait를 사용하는 방법이 두 가지가 있다.
+- wait (uniqe_lock) : ul unlock하고 signal 대기
+- wait (uniqe_lock, predicate pred) : 조건자 함수를 넘길 수 있음. 조건자 함수가
+																			true 일 경우 탈출함. -> while(!pred() )
+																										 wait(lock);
