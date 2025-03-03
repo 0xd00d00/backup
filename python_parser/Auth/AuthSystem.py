@@ -156,7 +156,7 @@ def makeLogFile(authenticated_people_list_):
                     f.write("  ** "+ ", ".join(actions) + " 만 인증함. \n\n")
 
 class GSpreadHelper:
-    SHEET_FILE_NAME = "24년_미라클"
+    SHEET_FILE_NAME = "미라클 인증"
     NAME_COL_START = 2
     NAME_VALUE_START = 3
     ROW_NUMBER_FOR_DATE = 3
